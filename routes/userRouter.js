@@ -3,9 +3,9 @@ const router = express.Router();
 import * as dotenv from 'dotenv'
 import bcrypt from 'bcrypt';
 import jwt from "jsonwebtoken";
-import { CreateUser, getUserByName } from '../services/userServices.js';
 dotenv.config();
 import crypto from "crypto";
+import { CreateUser, getUserByEmail } from '../services/userServices.js';
 
 async function genHashedPassword(password){
     const NO_OF_ROUND = 10;
@@ -18,7 +18,7 @@ async function genHashedPassword(password){
 
 router.post('/login', async function(request, response){          //✔️
     const {email,password} = request.body;  
-    const userFromDb = await getUserByName(email);
+    const userFromDb = await getUserByEmail(email);
     // const userbyid = await getUserById(userFromDb.id)
     // console.log(userbyid);
     if(!userFromDb){
@@ -42,7 +42,7 @@ router.post('/login', async function(request, response){          //✔️
     const {name,email,password} = request.body; 
     console.log(request.body)
 
-    const userFromDb = await getUserByName(email);
+    const userFromDb = await getUserByEmail(email);
     const userid = crypto.randomBytes(16).toString("hex");
 
     if(userFromDb){
